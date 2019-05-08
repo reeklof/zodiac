@@ -24,18 +24,13 @@ function saveHoroscope() {
     } else {
         var chosenDate = ("2019-") + newUserDate;
     }
-    console.log(chosenDate);
 
     var formData = new FormData()
     formData.set("newHoroscope", chosenDate)
+    formData.set("action", "save")
 
     makeRequest("addHoroscope.php", "POST", formData, (data) => {
-        if (!data) {
-            console.log(data)
-        } else {
-            console.log(data[0].horoscopeSign);
             viewHoroscope();
-        }
     })
 }
 
@@ -50,18 +45,14 @@ function updateHoroscope() {
     } else {
         var chosenDate = ("2019-") + newUserDate;
     }
-    console.log(chosenDate);
 
     var formData = new FormData()
     formData.set("newHoroscope", chosenDate)
+    formData.set("action", "update")
 
     makeRequest("updateHoroscope.php", "POST", formData, (data) => {
-        if (!data) {
             console.log(data)
-        } else {
-            console.log(data[0].horoscopeSign);
             viewHoroscope();
-        }
     })
 }
 
@@ -77,15 +68,10 @@ function removeHoroscope() {
 // visar innehåll i session
 function viewHoroscope() {
     makeRequest("viewHoroscope.php", "GET", undefined, (data) => {
-        var zodiac = (data[0].horoscopeSign)
-        var text = document.getElementById('container');
-        text.innerHTML = zodiac;
-
-        if (!data) {
-            console.log(zodiac)
-        } else {
-
-            console.log(zodiac);
-        }
+        if (data != undefined) {
+            var zodiac = (data[0].horoscopeSign)
+            var text = document.getElementById('container');
+            text.innerHTML = zodiac;
+        } 
     })
 }

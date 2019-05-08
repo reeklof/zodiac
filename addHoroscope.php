@@ -12,29 +12,32 @@ session_start();
       WHERE (dateFrom <= '$chosenDate') AND (dateUntil >= '$chosenDate');");
       $query->execute();
       $result = $query->fetchAll();
-
-
+      
       if (empty($result)){
         return array("error" => "detta gick inte bra");
       }
       return $result;
     }
   } 
-
   if($_SERVER['REQUEST_METHOD'] == "POST" && !isset($_SESSION['horoscope']) && isset($_POST['newHoroscope'])){
-    try {
-        $chosenDate = $_POST["newHoroscope"];
-        $horoscope = new addHoroscope();
-        $databaseData = $horoscope->showHoroscope($chosenDate);
-        $_SESSION['horoscope'] = $databaseData;
-        echo json_encode($databaseData); 
-        exit;
-    }
-    catch (Exception $error) {
-      http_response_code(500);
-      echo json_encode($error->getMessage());
+    if($_POST['action'] == 'save') {
+      try {
+          $chosenDate = $_POST["newHoroscope"];
+          $horoscope = new addHoroscope();
+          $databaseData = $horoscope->showHoroscope($chosenDate);
+          $_SESSION['horoscope'] = $databaseData;
+          $_SESSION['action'] = 'save';
+          echo json_encode($databaseData); 
+
+          exit;
+        }
+      catch (Exception $error) {
+        http_response_code(500);
+        echo json_encode($error->getMessage());
+      }
     }
   } else {
+    // skrivs ut i consolen när uppdatering sker
     echo json_encode(false);
   }
 ?>
